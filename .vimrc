@@ -1,92 +1,131 @@
-set number 
-set relativenumber           " 画面左端に行番号を表示
-set signcolumn=yes    " 画面左端にサイン列を常に表示
-set laststatus=2      " 画面最下部に常にステータスラインを表示
-set cmdheight=2       " 画面最下部(ステータス行より下)のメッセージ表示欄を2行にする
-set showtabline=2     " タブ毎に常にタブラインを表示
+" ---表示設定---
+" 行番号表示
+set number
+" 相対行番号表示
+set relativenumber
+" 左にサイン列を表示
+set signcolumn=yes
+" ステータスラインを表示
+set laststatus=2
+" コマンド表示欄を2行
+set cmdheight=2
+" タブラインを表示
+set showtabline=2
+set foldmethod=syntax
+set foldlevelstart=99
+
+" ---入力・編集---
+" バックスペースの設定
 set backspace=indent,eol,start
+" インデントの設定
+set autoindent
+set smartindent
+set nocindent
+" タブをスペースに変換、インデント幅2
+set expandtab
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+
 set completeopt=menuone,noinsert,noselect,preview
+set wildmenu
 
-set wildmenu          " コマンドラインでTAB補完時に候補メニューを表示
-
-set tabstop=2         " タブを2文字分にする
-
-set noswapfile        " スワップファイル(.swp)を生成しない
-set nobackup          " バックアップファイル(~)を生成しない
-set noundofile        " undoファイル(.un~)を生成しない
-set encoding=utf-8    " Vim内部で使われる文字エンコーディングにutf-8にする
-
-set mouse=a           " マウス操作を有効にする
-set termguicolors
+" ---基本設定---
+set encoding=utf-8
+set mouse=a
 set clipboard=unnamed,autoselect
+set splitright
 
-" colorscheme iceberg
-nmap <silent> <Esc><Esc> :<C-u>nohlsearch<CR><Esc> " 文字列検索のハイライトオフ
-" nnoremap <C-n> :Fern . -reveal=% -drawer -toggle -width=30<CR>
+" ---ファイル管理---
+set noswapfile
+set nobackup
+"外部でファイル変更時読み直し
+set autoread
+" autoreadが実行される条件
+augroup auto_reload
+	autocmd!
+	autocmd FocusGained,BufEnter,CursorHold * checktime
+augroup END
 
-" vim関連map
+" ---検索---
+"  検索ハイライトをesc2回で消す
+nmap <silent> <Esc><Esc> :<C-u>nohlsearch<CR><Esc>
+
+" ---Leaderキーの設定---
 let mapleader = "\<Space>"
-" nnoremap <silent> <Leader>vc :new ~/.vim/_config/200-lsp.vim<CR>   
-" nnoremap <silent> <Leader>vm :new ~/.vim/_config/map.vim<CR>   
-nnoremap <silent> <Leader>vr :new ~/.vimrc<CR>
-" nnoremap <silent> <Leader>bk :highlight Normal ctermbg=none<CR>
-nnoremap <silent> <Leader>rr :source ~/.vimrc<CR>  
 
-nnoremap <silent> <Leader>term :set autochdir<CR>:vert terminal<CR> 
-"insertモードをjjで抜ける
+" ---keymapの設定---
+"　Leader + vrでvimrcを開く 
+nnoremap <silent> <Leader>vr :new ~/.vimrc<CR>
+"　Leader + rrでvimrcを反映
+nnoremap <silent> <Leader>rr :source ~/.vimrc<CR>  
+" insertモードをjjで抜ける
 inoremap <silent> jj <ESC>
-"man.vim
-map <leader>k <Plug>(Man)
-"行入れ替え
+" ctrl + j,kで行swap
 nnoremap <C-j> :m +1<CR>
 nnoremap <C-k> :m -2<CR>
-"Undoの永続化
+
+"---Undoの永続化---
 if has('persistent_undo')
-	let undo_path = expand('~/.vim/undo')
-	exe 'set undodir=' .. undo_path
-	set undofile
+  let undo_path = expand('~/.vim/undo')
+  call mkdir(undo_path, 'p')
+  exe 'set undodir=' . undo_path
+  set undofile
 endif
 
+"man.vim
+map <leader>k <Plug>(Man)
+
+" ---プラグイン---
 call plug#begin('~/.vim/plugged')
-  " Plug 'vim-jp/vimdoc-ja'
-  Plug 'vim-utils/vim-man'
-  " Plug 'itchyny/lightline.vim'
-  Plug 'vim-airline/vim-airline'
-  Plug 'vim-airline/vim-airline-themes'
+  " ---ファイルツリー fern---
   Plug 'lambdalisue/fern.vim'
   Plug 'lambdalisue/fern-hijack.vim'
   Plug 'lambdalisue/nerdfont.vim'
   Plug 'yuki-yano/fern-preview.vim'
   Plug 'lambdalisue/fern-renderer-nerdfont.vim'
-  " Plug 'lambdalisue/fern-git-status.vim'
   Plug 'lambdalisue/glyph-palette.vim'
+  " ---Git---
   Plug 'tpope/vim-fugitive'
+  " ---コメントアウト---
   Plug 'tpope/vim-commentary'
+  " ---fzf---
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
   Plug 'junegunn/fzf.vim'
+  " ---LSP---
   Plug 'prabirshrestha/vim-lsp'
   Plug 'mattn/vim-lsp-settings'
   Plug 'prabirshrestha/asyncomplete.vim'
   Plug 'prabirshrestha/asyncomplete-lsp.vim'
-  " Plug 'liuchengxu/vim-which-key'
-  Plug 'cocopon/pgmnt.vim'
-  " Plug 'dracula/vim'
-  " Plug 'mattn/vim-yoshi'
-  " Plug 'mattn/vim-chatgpt'
-	Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+  " ---ステータスライン---
+  Plug 'vim-airline/vim-airline'
+  Plug 'vim-airline/vim-airline-themes'
+  " ---colorscheme---
 	Plug 'morhetz/gruvbox'
-	Plug 'skanehira/preview-markdown.vim'	
+	Plug 'cocopon/iceberg.vim'
+  Plug 'catppuccin/vim', { 'as': 'catppuccin' }
+  " ---formatter---
 	Plug 'rhysd/vim-clang-format'
-	" Plug	'fatih/vim-go'
-  " Plug 'puremourning/vimspector'
-  " Plug 'vim-utils/vim-debug'
+  " ---manの表示---
+  Plug 'vim-utils/vim-man'
+
+  " ---トライアル中---
+  " Docker環境でのvimコピー
+	Plug 'ojroques/vim-oscyank'
+  " Markdownファイルの表示
+  Plug 'cocopon/pgmnt.vim'
+	Plug 'skanehira/preview-markdown.vim'	
 call plug#end()
 
+" ---プラグイン設定---
+" ---airline---
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme = 'deus'
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 nmap <C-p> <Plug>AirlineSelectPrevTab
 nmap <C-t> <Plug>AirlineSelectNextTab
+
+" ---fern---
 " 公式リポジトリを参考にキーマップを追加
 function! s:fern_settings() abort
   nmap <silent> <buffer> p     <Plug>(fern-action-preview:toggle)
@@ -111,21 +150,23 @@ let g:fern#default_hidden=1 " 隠しファイルを表示する
 let g:fern#renderer = 'nerdfont'
 let g:fern#renderer#nerdfont#indent_markers = 1
 
-let g:lsp_diagnostics_enabled = 0                        " Diagnosticsを有効にする
-" let g:lsp_diagnostics_echo_cursor = 1                    " カーソル下のエラー、警告、情報、ヒントを画面下部のコマンド ラインに表示
-let g:lsp_diagnostics_echo_cursor = 0                    " カーソル下のエラー、警告、情報、ヒントを画面下部のコマンド ラインに表示
-let g:lsp_diagnostics_echo_delay = 50                    " Diagnosticsの表示の遅延を50msに設定
-let g:lsp_diagnostics_float_cursor = 0                   " カーソル下のエラー、警告、情報、ヒントをフロート表示
-let g:lsp_diagnostics_signs_enabled = 0                  " 画面左端のサイン列にエラー、警告、情報、ヒントのアイコンを 表示
-let g:lsp_diagnostics_signs_delay = 50                   " Diagnosticsのサイン列の表示の遅延を50msに設定
-let g:lsp_diagnostics_signs_insert_mode_enabled = 0      " 挿入モード時、Diagnosticsのサイン列を表示しない
-let g:lsp_diagnostics_highlights_delay = 50              " Diagnosticsの指摘箇所自体の文字ハイライト表示の遅延を50msに設定
-let g:lsp_diagnostics_highlights_insert_mode_enabled = 0 " 挿入モード時、Diagnosticsの指摘箇所自体の文字ハイライトを表示しない
-let g:lsp_document_code_action_signs_enabled = 0         " 画面左端のサイン列にコードアクションのアイコン非表示
+" ctrl + nでファイルツリーを開く
+nnoremap <C-n> :Fern . -reveal=% -drawer -toggle -width=30<CR>
 
-let g:asyncomplete_popup_delay = 100 " 補完メニューを開く際の遅延を100msに設定
+" ---LSP設定---
+let g:lsp_diagnostics_enabled = 1
+let g:lsp_diagnostics_echo_cursor = 0
+let g:lsp_diagnostics_echo_delay = 50
+let g:lsp_diagnostics_float_cursor = 0
+let g:lsp_diagnostics_signs_enabled = 0
+let g:lsp_diagnostics_signs_delay = 50
+let g:lsp_diagnostics_signs_insert_mode_enabled = 0
+let g:lsp_diagnostics_highlights_delay = 50
+let g:lsp_diagnostics_highlights_insert_mode_enabled = 0
+let g:lsp_document_code_action_signs_enabled = 0
+let g:asyncomplete_popup_delay = 100
 
-" fzf
+" ---fzf設定---
 nnoremap <silent> <leader>f :Files<CR>
 nnoremap <silent> <leader>g :GFiles<CR>
 nnoremap <silent> <leader>G :GFiles?<CR>
@@ -139,8 +180,59 @@ imap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
 
 set timeoutlen=500 " 100msだと他のキーマッピングが上手く動かないため500msに設定
 
-"test
-nnoremap <C-n> :Fern . -reveal=% -drawer -toggle -width=30<CR>
-colorscheme iceberg
+function! s:on_lsp_buffer_enabled() abort
+  setlocal omnifunc=lsp#complete
+  if exists('+tagfunc')
+    setlocal tagfunc=lsp#tagfunc
+  endif
 
+  nmap <buffer> gd <plug>(lsp-definition)
+  nmap <buffer> gD <plug>(lsp-declaration)
+  nmap <buffer> gr <plug>(lsp-references)
+  nmap <buffer> gi <plug>(lsp-implementation)
+  nmap <buffer> K  <plug>(lsp-hover)
+  nmap <buffer> <leader>rn <plug>(lsp-rename)
+endfunction
+
+augroup lsp_settings
+  autocmd!
+  autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+
+" ---OSCYank設定---
+"  Leader + yでコピー
+vnoremap <leader>y y:OSCYankRegister "<CR>
+
+" ---color設定---
+syntax enable
+set termguicolors
+set background=dark
+colorscheme catppuccin_mocha
+
+" ---言語設定----
+" マークダウンプレビューのデフォルト
 let g:preview_markdown_parser = 'glow' 
+
+" C++フォーマッターの設定
+let g:clang_format#auto_format = 0
+
+" ---自作関数---
+"  Leader + e で呼び出し
+"  日本語と対応する英単語をprogramming.tsvから検索する
+function! ProgrammingDictionary()
+
+    let key = input('Japanese: ')
+
+    if empty(key)
+        return
+    endif
+
+    call fzf#run({
+        \ 'source': printf("grep '^%s' ~/.vim/dict/programming.tsv | cut -f2", key),
+        \ 'sink': { word -> setreg('+', word) },
+        \ })
+
+endfunction
+
+nnoremap <Leader>e :call ProgrammingDictionary()<CR>
+
