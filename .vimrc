@@ -27,6 +27,11 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 
+" 空白文字を表示
+set list
+set listchars=tab:▸\ ,trail:·
+
+
 set completeopt=menuone,noinsert,noselect,preview
 set wildmenu
 
@@ -65,6 +70,9 @@ inoremap <silent> jj <ESC>
 nnoremap <C-j> :m +1<CR>
 nnoremap <C-k> :m -2<CR>
 
+" タブの表示・非表示切替
+nnoremap <silent> <leader>l :set list!<CR>
+
 "---Undoの永続化---
 if has('persistent_undo')
   let undo_path = expand('~/.vim/undo')
@@ -101,20 +109,20 @@ call plug#begin('~/.vim/plugged')
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
   " ---colorscheme---
-	Plug 'morhetz/gruvbox'
-	Plug 'cocopon/iceberg.vim'
+  Plug 'morhetz/gruvbox'
+  Plug 'cocopon/iceberg.vim'
   Plug 'catppuccin/vim', { 'as': 'catppuccin' }
   " ---formatter---
-	Plug 'rhysd/vim-clang-format'
+  Plug 'rhysd/vim-clang-format'
   " ---manの表示---
   Plug 'vim-utils/vim-man'
 
   " ---トライアル中---
   " Docker環境でのvimコピー
-	Plug 'ojroques/vim-oscyank'
+  Plug 'ojroques/vim-oscyank'
   " Markdownファイルの表示
   Plug 'cocopon/pgmnt.vim'
-	Plug 'skanehira/preview-markdown.vim'	
+  Plug 'skanehira/preview-markdown.vim'	
 call plug#end()
 
 " ---プラグイン設定---
