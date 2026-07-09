@@ -1,0 +1,25 @@
+係数	coefficient
+累積和	prefix_sum
+最大値	maximum
+最小値	minimum
+訪問済み	visited
+現在	current
+次		next
+前		prev
+合計	total
+平均	average
+開始	start
+終了	end
+長さ	length
+幅	width
+高さ	height
+親	parent
+子	child
+隣接	adjacent
+差分	diff
+距離	distance
+経路	path
+数列	sequence
+グラフ	graph
+辺	edge
+
